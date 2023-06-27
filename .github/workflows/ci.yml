@@ -1,0 +1,95 @@
+---
+name: Test on all perls
+
+on: [push, pull_request, workflow_dispatch]
+
+jobs:
+
+  test:
+
+    name:
+      Test on perl${{ matrix.perl-version }}
+
+    runs-on:
+      ubuntu-latest
+
+    strategy:
+      fail-fast: false
+      matrix:
+        perl-version:
+          - '5.14'  # 2011
+          - '5.16'  # 2012
+          - '5.18'  # 2013
+          - '5.20'  # 2014
+          - '5.22'  # 2015
+          - '5.24'  # 2016
+          - '5.26'  # 2017
+          - '5.28'  # 2018
+          - '5.30'  # 2019
+          - '5.32'  # 2020
+          - '5.34'  # 2021
+          - '5.36'  # 2022
+          - 'devel'
+
+    container:
+      image: perldocker/perl-tester:${{ matrix.perl-version }}
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Run tests
+        run: |
+          perl --version
+          cpanm --notest Lingua::JA::Name::Splitter
+          prove -l
+
+  dzil:
+
+    name:
+      Test dist on perl${{ matrix.perl-version }}
+
+    runs-on:
+      ubuntu-latest
+
+    strategy:
+      fail-fast: false
+      matrix:
+        perl-version:
+          - '5.20'  # 2014
+          - '5.22'  # 2015
+          - '5.24'  # 2016
+          - '5.26'  # 2017
+          - '5.28'  # 2018
+          - '5.30'  # 2019
+          - '5.32'  # 2020
+          - '5.34'  # 2021
+          - '5.36'  # 2022
+          - 'devel'
+
+    container:
+      image: perldocker/perl-tester:${{ matrix.perl-version }}
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Show perl version
+        run: perl --version
+
+      - name: Prepare
+        run: |
+          dzil authordeps --missing | cpanm --notest
+          dzil listdeps --missing --author | cpanm --notest
+
+      - name: Build
+        run: |
+          dzil build
+
+      - name: Test
+        run: |
+          dzil test --all
+
+      - name: Install
+        run: |
+          dzil install
+
+# vi:set et ts=2 sw=2:

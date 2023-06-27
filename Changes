@@ -1,0 +1,12 @@
+{{$NEXT}}
+
+1.000 (2023-06-30)
+
+    - Translate to Perl
+    - Embrace Unicode
+    - Add normalize
+    - Add nametrim
+    - Add support for complex names from many more languages
+    - Expand support for complex names for existing languages
+    - Add namesplit support for Chinese/Japanese/Korean/Vietnamese names
+
