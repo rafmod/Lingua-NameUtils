@@ -39,7 +39,7 @@ Lingua::NameUtils - Identify given/family names and capitalize correctly
 
  $name = nametrim($name);
 
- # Unicode normalization of internal data
+ # Unicode normalization of internal data (default is NFC)
 
  use Unicode::Normalize qw(NFD);
  normalize(\&NFD);
@@ -111,17 +111,17 @@ ways:
 
 For a full name (implicitly):
 
- $name = namecase("JOHN PETER SMITH");
- $name = namecase("SMITH, JOHN PETER");
+ $full_name = namecase("JOHN PETER SMITH");
+ $full_name = namecase("SMITH, JOHN PETER");
 
- $name = namecase; # Same as namecase($_)
+ $full_name = namecase; # Same as namecase($_)
 
 If not supplied, the C<$name> argument defaults to C<$_>.
 
 For a full name (explicitly):
 
- $name = namecase("JOHN PETER SMITH", 'full');
- $name = namecase("SMITH, JOHN PETER", 'full');
+ $full_name = namecase("JOHN PETER SMITH", 'full');
+ $full_name = namecase("SMITH, JOHN PETER", 'full');
 
 Note that the full name can be supplied in the (ambiguous) natural order,
 with the given name(s) followed by the family name, or unambiguously, with
@@ -129,17 +129,17 @@ the family name followed by a comma followed by the given name(s).
 
 For a given name or names by itself (same as I<gnamecase()>, see below):
 
- $name = namecase("JOHN PETER", 'given');
+ $given_names = namecase("JOHN PETER", 'given');
 
 For a family name by itself (same as I<fnamecase()>, see below):
 
- $name = namecase("SMITH", 'family');
+ $family_name = namecase("SMITH", 'family');
 
 For a family name by itself when you have (or might one day have) any case
 exceptions intended to only affect a single individual (same as
 I<fnamecase()>, see below):
 
- $name = namecase("SMITH", 'family', "JOHN PETER");
+ $family_name = namecase("SMITH", 'family', "JOHN PETER");
 
 =item B<S<$given_names = gnamecase([$given_names])>>
 
@@ -262,7 +262,7 @@ Returns 1 if the exception was successfully added. Returns 0 otherwise. The
 only reason for a failure is if the supplied exception does not contain a
 comma.
 
-=item B<S<nametrim($name)>>
+=item B<S<$name = nametrim($name)>>
 
 Returns the supplied name (given, family, or full name), with any leading
 and trailing spaces removed, any run of multiple spaces replaced with a
@@ -283,7 +283,7 @@ from whatever was used for the module's internal data in the module source
 code (i.e., NFC). A difference in normalization can lead to false negatives
 and incorrect results when matching names against internal data.
 
-=item B<kc($name)> [Internal]
+=item B<$kcname = kc($name)> [Internal]
 
 This function is internal to the module and is never exported. It returns
 hash keys created from names for looking up internal data. It assumes that
