@@ -43,13 +43,12 @@ sub kc { return $myfc->(shift) =~ s/$apostrophe/'/gr =~ s/$hyphen/-/gr }
 
 my @namecase_exceptions =
 (qw(
-
 	MacAlister MacAlpin MacAlpine MacArthur MacAuley MacBain MacBean
 	MacCallum MacColl MacDomhnaill MacDonald MacDonell MacDonnell MacDougall
 	MacDowall MacDuff MacEvan MacEwen MacFarlane MacFie MacGill MacGillivray
 	MacGregor MacInnes MacIntosh MacIntyre MacIver MacKay MacKenzie
 	MacKinlay MacKinnon MacKintosh MacLachlan MacLaine MacLaren MacLaurin
-	MacLea MacLean MacLellan MacLennan MacLeod MacMillan MacNab MacNaughton
+	MacLea MacLean MacLeay MacLellan MacLennan MacLeod MacMillan MacNab MacNaughton
 	MacNeacail MacNeil MacNeill MacNicol MacO'Shannaig MacPhee MacPherson
 	MacQuarrie MacQueen MacRae MacTavish MacThomas
 
@@ -115,7 +114,6 @@ my @namecase_exceptions =
 	VanLeer VanLiere VanLuven VanMeter VanOlinda VanOrmer VanPelt VanSchaick
 	VanSciver VanScoy VanScoyk VanSickle VanTassel VanTuyl VanValkenburg
 	VanVolkenburgh VanWinkle VanWysenberghe VanZandt VenDerWeyer VonCannon
-
 ));
 
 my %namecase_exceptions;
@@ -141,8 +139,6 @@ my $namecase_exceptions_re;
 
 my %split_starter;
 my $split_starter_re;
-my $kcben = kc('ben');
-my $kcbean = kc('bean');
 my @split_starter =
 (qw(
 	de de’ de' del dels dela della delle dal dalla degli di da du do dos das
@@ -153,6 +149,16 @@ my @split_starter =
 	san santa santos st st. ste ste.
 	ka te
 ));
+
+# Data for regexes that are affected by normalization
+
+my @irish_o = qw(O Ó);
+my @irish_vowel = qw(a e i o u á é í ó ú);
+my @irish_post_bean = qw(Uí Ui Mhic);
+
+my $irish_o_re = "(?:@{[join '|', @irish_o]})";
+my $irish_vowel_re = "(?:@{[join '|', @irish_vowel]})";
+my $irish_post_bean_re = "(?:@{[join '|', @irish_post_bean]})";
 
 # Family names that appear first (Chinese, Korean, Vietnamese).
 # When romanized, these family names can appear first or last.
@@ -772,11 +778,11 @@ sub namecase
 		# Note1: "ben" is only detected when unambiguous
 
 		$name =~ s/\b(d$apostrophe|(?:de(?: la|$apostrophe)?|del|dela|dels|della|delle|dal|dalla|degli|di|du|da|do|dos|das|y|i|e|von und zu|von|zu|van het|van|der|ter|den|tot|af|av|til|ap|ab|ferch|verch|ibn|bin|bint|binti|binte|bat|mibeit|mimishpachat|ka|of)\s)/\L$1/ig;
-		$name =~ s/\b(dall|dell)($apostrophe)(\w)/\L$1\E$2\U$3/ig;  # Italian: dall'Agnese
-		$name =~ s/((?:^|\s)${apostrophe})([st])(\w)/$1\L$2\U$3/ig; # Dutch: 'sGravesande
-		$name =~ s/\b([OÓ] )(h)([aeiouáéíóú])/$1\L$2\U$3/ig;        # Irish: Ó hUiginn
-		$name =~ s/\b(el|al|ut|ha)(?=$hyphen)/\L$1/ig;              # Arabic/Hebrew: el- al- ut- ha-
-		$name =~ s/\b(v)(?=$apostrophe)/\L$1/ig;                    # Hebrew: v'Rachel
+		$name =~ s/\b(dall|dell)($apostrophe)(\w)/\L$1\E$2\U$3/ig;     # Italian: dall'Agnese
+		$name =~ s/((?:^|\s)${apostrophe})([st])(\w)/$1\L$2\U$3/ig;    # Dutch: 'sGravesande
+		$name =~ s/\b($irish_o_re )(h)($irish_vowel_re)/$1\L$2\U$3/ig; # Irish: Ó hUiginn
+		$name =~ s/\b(el|al|ut|ha)(?=$hyphen)/\L$1/ig;                 # Arabic/Hebrew: el- al- ut- ha-
+		$name =~ s/\b(v)(?=$apostrophe)/\L$1/ig;                       # Hebrew: v'Rachel
 		$name =~ s/^(ben\s)/\L$1/i if $mode eq 'family' || index($name, ',') != -1; # Hebrew: ben if family
 		$name =~ s/(?<=\s)\b(ben)\b(?=\s)/\L$1/i if $name =~ / v$apostrophe| ha$hyphen(?:Kohein|Levi|Rav)\b/; # Hebrew: ben if v' or ha-
 
@@ -956,8 +962,8 @@ sub namesplit
 	{
 		my $kcstarter = kc($words[$i]);
 		next unless exists $split_starter{$kcstarter};
-		next if $kcstarter eq $kcben && $name !~ / v$apostrophe| ha$hyphen(?:Kohein|Levi|Rav)\b/i; # Hebrew
-		next if $kcstarter eq $kcbean && $name !~ /\b$kcbean (?:Uí|Ui|Mhic)\b/i; # Irish
+		next if $kcstarter eq 'ben' && $name !~ / v$apostrophe| ha$hyphen(?:Kohein|Levi|Rav)\b/i; # Hebrew
+		next if $kcstarter eq 'bean' && $name !~ /\bbean $irish_post_bean_re\b/i; # Irish
 		next if $i == $#words;
 
 		--$i if $i > 1 && $kcstarter =~ /^[yi]$/i; # Spanish/Catalan
@@ -1084,8 +1090,12 @@ sub normalize
 	$namecase_exceptions_re = $func->($namecase_exceptions_re) if defined $namecase_exceptions_re;
 	%namesplit_exceptions = map { $func->($_) => $func->($namesplit_exceptions{$_}) } keys %namesplit_exceptions;
 	%split_starter = map { $func->($_) => 1 } keys %split_starter;
-	$kcben = $func->($kcben);
-	$kcbean = $func->($kcbean);
+	@irish_o = map { $func->($_) } @irish_o;
+	$irish_o_re = '(?:' . join('|', @irish_o) . ')';
+	@irish_vowel = map { $func->($_) } @irish_vowel;
+	$irish_vowel_re = '(?:' . join('|', @irish_vowel) . ')';
+	@irish_post_bean = map { $func->($_) } @irish_post_bean;
+	$irish_post_bean_re = '(?:' . join('|', @irish_post_bean) . ')';
 
 	%family_names_ck = map { $func->($_) => 1 } keys %family_names_ck;
 	$family_names_ck_re = qr/(?:@{[join '|', keys %family_names_ck]})/;
