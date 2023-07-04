@@ -41,7 +41,7 @@ sub kc { return $myfc->(shift) =~ s/$apostrophe/'/gr =~ s/$hyphen/-/gr }
 
 # Builtin namecase exceptions (Mostly gathered by Michael R. Davis (MRDVT))
 
-my %namecase_exceptions = map { kc($_) => $_ }
+my @namecase_exceptions =
 (qw(
 
 	MacAlister MacAlpin MacAlpine MacArthur MacAuley MacBain MacBean
@@ -118,6 +118,8 @@ my %namecase_exceptions = map { kc($_) => $_ }
 
 ));
 
+my %namecase_exceptions;
+
 # Capitalization exceptions for full names used by namecase().
 # Include both forms: "given_names family_name" and "family_name, given_names".
 
@@ -127,6 +129,30 @@ my %namecase_exceptions_full;
 # This must have the same keys as namecase_exceptions_full.
 
 my %fnamecase_exceptions_full;
+
+# Non-individual case exception replacements need a long regex that needs to
+# be constructed, and can change. But probably not often. And sometimes a
+# lot at once. Regex construction is cached lazily when needed for use.
+
+my $need_case_update = 1;
+my $namecase_exceptions_re;
+
+# Name affixes that start a multi-word family name
+
+my %split_starter;
+my $split_starter_re;
+my $kcben = kc('ben');
+my $kcbean = kc('bean');
+my @split_starter =
+(qw(
+	de de’ de' del dels dela della delle dal dalla degli di da du do dos das
+	le la li lo y i
+	van von zu der ter den af av til
+	el al ibn bin ben bat bint binti binte mibeit mimishpachat
+	of o ó ni ní mac nic ua bean ui uí mhic ap ab ferch verch
+	san santa santos st st. ste ste.
+	ka te
+));
 
 # Family names that appear first (Chinese, Korean, Vietnamese).
 # When romanized, these family names can appear first or last.
@@ -700,28 +726,6 @@ Trang Trầm Trâu Trì Triệu Trịnh Từ Tư_Mã Tưởng Úc Ứng Vạn V�
 Xầm Xế Yên Yến
 ));
 
-my %split_starter;
-my $split_starter_re;
-my $kcben = kc('ben');
-my $kcbean = kc('bean');
-my @split_starter =
-(qw(
-	de de’ de' del dels dela della delle dal dalla degli di da du do dos das
-	le la li lo y i
-	van von zu der ter den af av til
-	el al ibn bin ben bat bint binti binte mibeit mimishpachat
-	of o ó ni ní mac nic ua bean ui uí mhic ap ab ferch verch
-	san santa santos st st. ste ste.
-	ka te
-));
-
-# Non-individual case exception replacements need a long regex that needs to
-# be constructed, and can change. But probably not often. And sometimes a
-# lot at once. Regex construction is cached lazily when needed for use.
-
-my $need_case_update = 1;
-my $keys_namecase_exceptions;
-
 # Return the supplied full/given/family name with the case fixed
 
 sub namecase
@@ -803,11 +807,12 @@ sub namecase
 
 	if ($need_case_update)
 	{
-		$keys_namecase_exceptions = join '|', keys %namecase_exceptions;
+		%namecase_exceptions = map { kc($_) => $_ } @namecase_exceptions unless %namecase_exceptions;
+		$namecase_exceptions_re = join '|', keys %namecase_exceptions;
 		$need_case_update = 0;
 	}
 
-	$name =~ s/\b($keys_namecase_exceptions)\b/$namecase_exceptions{kc($1)}/ieg;
+	$name =~ s/\b($namecase_exceptions_re)\b/$namecase_exceptions{kc($1)}/ieg;
 
 	return $name;
 }
@@ -1076,7 +1081,7 @@ sub normalize
 	%namecase_exceptions = map { $func->($_) => $func->($namecase_exceptions{$_}) } keys %namecase_exceptions;
 	%namecase_exceptions_full = map { $func->($_) => $func->($namecase_exceptions_full{$_}) } keys %namecase_exceptions_full;
 	%fnamecase_exceptions_full = map { $func->($_) => $func->($fnamecase_exceptions_full{$_}) } keys %fnamecase_exceptions_full;
-	$keys_namecase_exceptions = $func->($keys_namecase_exceptions) if defined $keys_namecase_exceptions;
+	$namecase_exceptions_re = $func->($namecase_exceptions_re) if defined $namecase_exceptions_re;
 	%namesplit_exceptions = map { $func->($_) => $func->($namesplit_exceptions{$_}) } keys %namesplit_exceptions;
 	%split_starter = map { $func->($_) => 1 } keys %split_starter;
 	$kcben = $func->($kcben);
