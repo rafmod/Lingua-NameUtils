@@ -100,6 +100,7 @@ my @test_cases =
 	"da Silva Santos Costa e Sousa, João Duarte",
 
 	"von Pappenhim, Hans",
+	"von der Trave, Thomas",
 	"zu Pappenhim, Hans",
 	"von und zu Pappenhim, Hans",
 
@@ -219,7 +220,7 @@ my @test_cases =
 
 	"Tran, Van Man",
 	"Morrison, Van",
-	"Der, Joseph",
+	"Der, Joseph"
 );
 
 # Test cases for nametrim() are two-element arrayrefs containing the input
@@ -365,7 +366,7 @@ plan tests =>
 	$num_normaliation_cases * 24 +
 	$nowarnings;
 
-# Run normalize first, before $keys_namecase_exceptions is defined.
+# Run normalize first, before $namecase_exceptions_re is defined.
 # Just for branch coverage. It has no effect yet/here.
 
 use Unicode::Normalize qw(NFD NFC);

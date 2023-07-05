@@ -237,7 +237,7 @@ This function converts the corresponding return value of I<namesplit()> into
 a two-item array. See I<namesplit()> above for more details. If the name
 contains a single "word", then it isn't splittable, and so a one-element
 array is returned. If the name is the empty string or undefined, then a
-zero-element array is returned;
+zero-element array is returned.
 
 Chinese, Japanese, and Korean names in their own scripts/characters contain
 multiple words even though they don't contain spaces between them. If a
@@ -262,7 +262,7 @@ Returns 1 if the exception was successfully added. Returns 0 otherwise. The
 only reason for a failure is if the supplied exception does not contain a
 comma.
 
-=item B<S<$name = nametrim($name)>>
+=item B<S<$name = nametrim([$name])>>
 
 Returns the supplied name (given, family, or full name), with any leading
 and trailing spaces removed, any run of multiple spaces replaced with a
@@ -354,6 +354,7 @@ Kana, but they are not shown here for the same reason:
  Joao Duarte da Silva Santos Costa e Sousa
 
  Hans von Pappenhim
+ Thomas von der Trave
  Hans zu Pappenhim
  Hans von und zu Pappenhim
 
@@ -365,7 +366,7 @@ Kana, but they are not shown here for the same reason:
  Eva van der Haag
  Willem van den Haag
  Mees van het Horst
- Henrik van Voorst tot Voorst 
+ Henrik van Voorst tot Voorst
  Willem 'sGravesande
  Gemeente van 'sHertogenbosch
  Gemeente van 'tHoen

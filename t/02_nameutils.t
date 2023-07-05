@@ -100,6 +100,7 @@ my @test_cases =
 	"da Silva Santos Costa e Sousa, João Duarte",
 
 	"von Pappenhim, Hans",
+	"von der Trave, Thomas",
 	"zu Pappenhim, Hans",
 	"von und zu Pappenhim, Hans",
 
@@ -242,7 +243,7 @@ my @test_cases =
 
 	'Pavlova, Anna Pavlovna',
 	'Pavlova, Anna Matveyevna',
-	'Павлова, Анна Павловна',
+	'Павлова, Анна Павловна'
 );
 
 # Test cases for nametrim() are two-element arrayrefs containing the input
@@ -530,7 +531,7 @@ plan tests =>
 	$num_cjk_split_exceptions * 1 +
 	$nowarnings;
 
-# Run normalize first, before $keys_namecase_exceptions is defined.
+# Run normalize first, before $namecase_exceptions_re is defined.
 # Just for branch coverage. It has no effect yet/here.
 
 use Unicode::Normalize qw(NFD NFC);
@@ -894,7 +895,7 @@ for my $case (@chinese_split_cases)
 	is namesplit(uc $in), $out, "namesplit(@{[uc $in]}) Chinese";
 	is namesplit(lc $in), $out, "namesplit(@{[lc $in]}) Chinese";
 
-	cmp_deeply [nameparts($in)], [split /, /, $out], "nameparts $in [$case] Chinese";
+	cmp_deeply [nameparts($in)], [split /, /, $out], "nameparts $in [$out] Chinese";
 }
 
 # Test Korean namesplit
