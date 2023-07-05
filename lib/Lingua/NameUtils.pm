@@ -747,9 +747,11 @@ sub namecase
 	$name = lc(nametrim($name));
 	$name =~ s/\b(\w)/\U$1/g;
 
-	# Lowercase after apostrophes that follow more than 1 letter (e.g. Oso'ese but not O'Brien)
+	# Lowercase after apostrophes that follow more than one letter (e.g. Oso'ese but not O'Brien)
 	$name =~ s/(?<=\w{2}|$apostrophe\w)($apostrophe\w)/\L$1/g;
-	$name =~ s/(?<=\b[YS])($apostrophe\w)/\L$1/g;
+	# Lowercase after apostrophes that follow one letter that isn't O, V or D
+	# (e.g. T'ang, but not O'Brien or d'Iapico or v'Rachel)
+	$name =~ s/(?<=\b[^ODV])($apostrophe\w)/\L$1/g;
 
 	# Uppercase after "Mc" and "Fitz" ("Mac" is done selectively with built-in exceptions)
 	$name =~ s/\b(Mc|Fitz)(\w)/$1\U$2/g;
