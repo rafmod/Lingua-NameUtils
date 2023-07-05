@@ -934,7 +934,7 @@ sub namesplit
 	if (!scalar %family_names_ck_roman)
 	{
 		%family_names_ck_roman =
-			map { kc($_) => 1 }
+			map { (kc($_) =~ s/'/$apostrophe/r) => 1 }
 			grep { !/^$split_starter_re$/ }
 			@family_names_chinese_roman,
 			@family_names_korean_roman;

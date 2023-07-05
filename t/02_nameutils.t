@@ -361,7 +361,16 @@ my @chinese_split_cases =
 
 	['Jinping Xi', 'Xi, Jinping'],
 	['Jintao Hu', 'Hu, Jintao'],
-	['Zemin Jiang', 'Jiang, Zemin']
+	['Zemin Jiang', 'Jiang, Zemin'],
+
+	["T'ang Jinping", "T'ang, Jinping"],
+	["Jinping T'ang", "T'ang, Jinping"],
+	["T’ang Jinping", "T’ang, Jinping"],
+	["Jinping T’ang", "T’ang, Jinping"],
+	["Tʼang Jinping", "Tʼang, Jinping"],
+	["Jinping Tʼang", "Tʼang, Jinping"],
+	["Tʻang Jinping", "Tʻang, Jinping"],
+	["Jinping Tʻang", "Tʻang, Jinping"],
 );
 
 # Korean test cases for namesplit
