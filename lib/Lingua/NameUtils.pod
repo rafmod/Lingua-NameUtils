@@ -8,7 +8,7 @@ Lingua::NameUtils - Identify given/family names and capitalize correctly
 
  use Lingua::NameUtils qw(
      namecase gnamecase fnamecase namecase_exception
-     namesplit nameparts namesplit_exception
+     namesplit nameparts namesplit_exception namejoin
      nametrim normalize
  );
 
