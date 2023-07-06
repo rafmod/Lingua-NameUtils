@@ -1004,7 +1004,6 @@ sub namesplit
 			$ja_loaded = 1;
 		}
 
-		local $SIG{__WARN__} = sub {}; # Avoid warnings for 々 (kanji repeater symbol)
 		($f, $g) = Lingua::JA::Name::Splitter::split_kanji_name($name);
 		return "$f, $g";
 	}
