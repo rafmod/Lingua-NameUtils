@@ -42,13 +42,13 @@ Cyrillic work. It doesn't handle honorifics, titles, joined initials, or
 postnominals. It only handles names. But it does handle complex names coming
 from a variety of places (e.g., British Isles, Europe, Middle East, Africa,
 East Asia, Pacifika, Americas). By default, it doesn't correctly identify
-unhyphenated multi-name family names (like Spanish and Catalan and
-Portuguese names, unless the formal "y" or "i" or "e" is present). Such
-names need to be handled with split exceptions. It handles some mixed case
-names like McAdam, MacArthur, FitzSimmons, DeVito, VanZandt, etc., but there
-will be false negatives (and arguably false positives) which can be
-corrected with case exceptions. Over time, you will build up a set of case
-exceptions and split exceptions that meets the needs of your dataset.
+unhyphenated multi-name family names (like Spanish and Catalan names, unless
+the formal "y" or "i" is present). Such names need to be handled with split
+exceptions. It handles some mixed case names like McAdam, MacArthur,
+FitzSimmons, DeVito, VanZandt, etc., but there will be false negatives (and
+arguably false positives) which can be corrected with case exceptions. Over
+time, you will build up a set of case exceptions and split exceptions that
+meets the needs of your dataset.
 
 This is free software; you can redistribute it and/or modify it under the
 same terms as the Perl 5 programming language system itself.

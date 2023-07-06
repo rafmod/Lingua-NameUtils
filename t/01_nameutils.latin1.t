@@ -30,7 +30,7 @@ my $nowarnings = 1;
 # - "strings" containing an unambiguous full name:
 #   tested as supplied, and as ambiguous, and both uppercased,
 #   and both lowercased, with namecase, gnamecase, fnamecase,
-#   nameplit, and nameparts.
+#   namesplit, and nameparts.
 #
 # - [arrayref] containing two items: an unambiguous full name,
 #   followed by the expected incorrect namesplit result.
@@ -39,7 +39,7 @@ my $nowarnings = 1;
 #
 # - {hashref} containing a "name" string, a "case" string showing
 #   the expected possibly incorrect namecase result, and a "split"
-#   string showing the expected possibly incorrect nameplit result.
+#   string showing the expected possibly incorrect namesplit result.
 #   These demonstrate known limitations.
 #
 # - "strings" containing a single (given or family) name:
@@ -189,14 +189,14 @@ my @test_cases =
 	{ name => "John Ben Peters", case => "John Ben Peters", split => "Peters, John Ben" },
 	"Peters, John Ben",
 	# Wrong sometimes when technically ambiguous
-	{ name => "David ben Joseph",  case => "David Ben Joseph", split => "Joseph, David Ben" },
+	{ name => "David ben Joseph", case => "David Ben Joseph", split => "Joseph, David Ben" },
 	# Right when practically unambiguous (presence of v' and/or ha-)
-	{ name => "David ben Joseph v'Rachel",  case => "David ben Joseph v'Rachel", split => "ben Joseph v'Rachel, David" },
-	{ name => "David ben Joseph v' Rachel",  case => "David ben Joseph v' Rachel", split => "ben Joseph v' Rachel, David" },
-	{ name => "David ben Joseph ha-Kohein",  case => "David ben Joseph ha-Kohein", split => "ben Joseph ha-Kohein, David" },
-	{ name => "David ben Joseph ha-Levi",  case => "David ben Joseph ha-Levi", split => "ben Joseph ha-Levi, David" },
-	{ name => "David ben Joseph ha-Rav",  case => "David ben Joseph ha-Rav", split => "ben Joseph ha-Rav, David" },
-	{ name => "David ben Joseph v'Rachel ha-Rav",  case => "David ben Joseph v'Rachel ha-Rav", split => "ben Joseph v'Rachel ha-Rav, David" },
+	{ name => "David ben Joseph v'Rachel", case => "David ben Joseph v'Rachel", split => "ben Joseph v'Rachel, David" },
+	{ name => "David ben Joseph v' Rachel", case => "David ben Joseph v' Rachel", split => "ben Joseph v' Rachel, David" },
+	{ name => "David ben Joseph ha-Kohein", case => "David ben Joseph ha-Kohein", split => "ben Joseph ha-Kohein, David" },
+	{ name => "David ben Joseph ha-Levi", case => "David ben Joseph ha-Levi", split => "ben Joseph ha-Levi, David" },
+	{ name => "David ben Joseph ha-Rav", case => "David ben Joseph ha-Rav", split => "ben Joseph ha-Rav, David" },
+	{ name => "David ben Joseph v'Rachel ha-Rav", case => "David ben Joseph v'Rachel ha-Rav", split => "ben Joseph v'Rachel ha-Rav, David" },
 
 	"ben Joseph v'Rachel, David",
 	"bat Moshe, Leah",
@@ -251,7 +251,7 @@ my @nametrim_cases =
 
 # Test cases for namecase_exception() are strings containing
 # the exception. It can either be a family name, or an
-# unamiguous full name: "Family_name, Given_names".
+# unambiguous full name: "Family_name, Given_names".
 
 my @case_exception_cases =
 (
@@ -293,7 +293,7 @@ my @split_exception_cases =
 my @nonascii_punctuation_cases =
 (
 	[
-		"fAm d'Fam-Fam, Giv", # ascii hyphen-dash
+		"fAm d'Fam-Fam, Giv", # ASCII hyphen-dash
 		"fAm d\N{RIGHT SINGLE QUOTATION MARK}Fam-Fam, Giv", # U+2019 Right Single Quotation Mark
 		"fAm d\N{MODIFIER LETTER APOSTROPHE}Fam-Fam, Giv", # U+02BC Modifier Letter Apostrophe Unicode Character
 		"fAm d\N{MODIFIER LETTER TURNED COMMA}Fam-Fam, Giv", # U+02BB Modifier Letter Turned Comma
@@ -301,7 +301,7 @@ my @nonascii_punctuation_cases =
 		"fAm d\N{RIGHT SINGLE QUOTATION MARK}Fam\N{HYPHEN}Fam, Giv", # U+2010 Hyphen
 		"fAm d\N{MODIFIER LETTER APOSTROPHE}Fam\N{NON-BREAKING HYPHEN}Fam, Giv", # U+2021 Non-Breaking Hyphen
 		"fAm d\N{MODIFIER LETTER TURNED COMMA}Fam\N{EN DASH}Fam, Giv", # U+2013 En Dash
-		"fAm d\N{MODIFIER LETTER TURNED COMMA}Fam\N{EM DASH}Fam, Giv"  # U+2014 Em Dash
+		"fAm d\N{MODIFIER LETTER TURNED COMMA}Fam\N{EM DASH}Fam, Giv" # U+2014 Em Dash
 	],
 	[
 		"Ka\N{RIGHT SINGLE QUOTATION MARK}ana\N{RIGHT SINGLE QUOTATION MARK}ana, Giv", # Multiple
@@ -481,9 +481,9 @@ for my $case (@test_cases)
 		my $n2 = uc $name;
 		my $n3 = lc $name;
 
-		is namecase($n1), $ncase, "namecase $name [$ncase - expect wrong]";
-		is namecase($n2), $ncase, "namecase $name [$ncase - expect wrong]";
-		is namecase($n3), $ncase, "namecase $name [$ncase - expect wrong]";
+		is namecase($n1), $ncase, "namecase $n1 [$ncase - expect wrong]";
+		is namecase($n2), $ncase, "namecase $n2 [$ncase - expect wrong]";
+		is namecase($n3), $ncase, "namecase $n3 [$ncase - expect wrong]";
 
 		is namesplit($n1), $nsplit, "namesplit $n1 [$ncase - expect wrong]";
 		is namesplit($n2), $nsplit, "namesplit $n2 [$ncase - expect wrong]";

@@ -80,13 +80,13 @@ Cyrillic work. It doesn't handle honorifics, titles, joined initials, or
 postnominals. It only handles names. But it does handle complex names coming
 from a variety of places (e.g., British Isles, Europe, Middle East, Africa,
 East Asia, Pacifika, Americas). By default, it doesn't correctly identify
-unhyphenated multi-name family names (like Spanish and Catalan and
-Portuguese names, unless the formal "y" or "i" or "e" is present). Such
-names need to be handled with split exceptions. It handles some mixed case
-names like McAdam, MacArthur, FitzSimmons, DeVito, VanZandt, etc., but there
-will be false negatives (and arguably false positives) which can be
-corrected with case exceptions. Over time, you will build up a set of case
-exceptions and split exceptions that meets the needs of your dataset.
+unhyphenated multi-name family names (like Spanish and Catalan names, unless
+the formal "y" or "i" is present). Such names need to be handled with split
+exceptions. It handles some mixed case names like McAdam, MacArthur,
+FitzSimmons, DeVito, VanZandt, etc., but there will be false negatives (and
+arguably false positives) which can be corrected with case exceptions. Over
+time, you will build up a set of case exceptions and split exceptions that
+meets the needs of your dataset.
 
 =head1 EXPORT TAGS
 
@@ -219,13 +219,14 @@ This module recognizes the 400 or so most common Chinese family names (97%
 of the population) in Chinese characters and in one romanized spelling, and
 additionally, the 100 most common Chinese family names (85% of the
 population) in pinyin and various other romanized spellings, as used in
-several countries. It also recognizes the 190 most common Korean names (98%
-of the population) in Hangul, Hanja, and romanized. It also recognizes the
-209 Vietnamese names (100% of the population, apparently). There are too
-many Japanese family names (over 300,000) to maintain a list of them, so
-this module delegates to I<Lingua::JA::Name::Splitter> which employs a
-statistical method to identify Japanese family names written in Kanji and
-Kana. I don't know what proportion of Japanese family names it identifies.
+several countries. It also recognizes the 190 most common Korean family
+names (98% of the population) in Hangul, Hanja, and romanized. It also
+recognizes the 209 Vietnamese family names (100% of the population,
+apparently). There are too many Japanese family names (over 300,000) to
+maintain a list of them, so this module delegates to
+I<Lingua::JA::Name::Splitter> which employs a statistical method to identify
+Japanese family names written in Kanji and Kana. I don't know what
+proportion of the Japanese-named population it identifies.
 
 =item B<S<($family_name, $given_names) = nameparts([$full_name])>>
 
@@ -281,9 +282,9 @@ Korean names, and Vietnamese names, are always joined in Western name order.
 
 Returns the supplied name (given, family, or full name), with any leading
 and trailing spaces removed, any run of multiple spaces replaced with a
-single space, any space before a comma-like character or hyphen-like
-character removed, and with a space added after any comma-like character, if
-one is not already present there.
+single space, any space before a comma or around a hyphen-like character
+removed, and with a space added after any comma, if one is not already
+present there.
 
 If not supplied, the C<$name> argument defaults to C<$_>.
 
@@ -298,7 +299,7 @@ from whatever was used for the module's internal data in the module source
 code (i.e., NFC). A difference in normalization can lead to false negatives
 and incorrect results when matching names against internal data.
 
-=item B<$kcname = kc($name)> [Internal]
+=item B<S<$kcname = kc($name)>> [Internal]
 
 This function is internal to the module and is never exported. It returns
 hash keys created from names for looking up internal data. It assumes that
@@ -487,12 +488,13 @@ module. If it is, it can be corrected with split exceptions (or with more
 detailed Hebrew names).
 
 Romanized Chinese, Korean and Vietnamese family names can appear at the
-start or the end of a full name. This module detects them in either format.
-But there can be false positives when a given name looks the same as a
-romanized CKV family name. For example, I<namesplit()> works better for
+start or at the end of a full name. This module detects them in either
+format. But there can be false positives when a Chinese or Korean family
+name is at the end of the full name, and the given name also looks like a
+Chinese or Korean family name. For example, I<namesplit()> works better for
 Korean names where the family name appears at the start rather than at the
 end, because some Korean given names look like a family name. Other odd
-cases might arise due to not knowing which language a romanized name is
+cases might arise due to never knowing which language a romanized name is
 from. But split exceptions should help when these cases are noticed.
 
 =head1 CAVEAT
