@@ -35,6 +35,8 @@ Lingua::NameUtils - Identify given/family names and capitalize correctly
 
  namesplit_exception("Bryant Smith, Denise"); # Multi-name family names
 
+ $full_name = namejoin($family_name, $given_names);
+
  # Trim function
 
  $name = nametrim($name);
@@ -97,7 +99,7 @@ export tags are available for the C<use> statement:
 
 =item C<:case> - I<namecase>, I<gnamecase>, I<fnamecase>, I<namecase_exception>, I<normalize>
 
-=item C<:split> - I<namesplit>, I<nameparts>, I<namesplit_exception>, I<normalize>
+=item C<:split> - I<namesplit>, I<nameparts>, I<namesplit_exception>, I<namejoin>, I<normalize>
 
 =back
 
@@ -263,6 +265,17 @@ Chinese name with a family name consisting of one character.
 Returns 1 if the exception was successfully added. Returns 0 otherwise. The
 only reason for a failure is if the supplied exception does not contain a
 comma.
+
+=item B<S<$full_name = namejoin($family_name, $given_names)>>
+
+Returns the full name composed of the supplied family name and given names.
+
+Chinese, Japanese, and Korean names in their own scripts/characters are
+concatenated in Eastern name order (with the family name on the left). All
+names in Latin and other scripts are joined in Western name order (with the
+family name on the right), and with a space character added between the
+given names and the family name. Note that romanized Chinese, Japanese, and
+Korean names, and Vietnamese names, are always joined in Western name order.
 
 =item B<S<$name = nametrim([$name])>>
 

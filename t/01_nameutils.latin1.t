@@ -333,6 +333,22 @@ my @normalization_cases =
 	"Extra De\N{RIGHT SINGLE QUOTATION MARK} MaDiCï, MaRcÓ" # Test %split_starter as well
 );
 
+# Test cases for namejoin() are three-element arrayrefs containing the input
+# family name and given names, and the expected resulting full name.
+
+my @namejoin_cases =
+(
+	[undef, undef, undef],
+	[undef, 'Giv', 'Giv'],
+	['Fam', undef, 'Fam'],
+
+	['Smith', 'Peter', 'Peter Smith'],
+	['van Haag', 'Bram', 'Bram van Haag'],
+	['Hu', 'Jintao', 'Jintao Hu'],
+	['Lim', 'Yo Hwan', 'Yo Hwan Lim'],
+	['Nguyen', 'Thi Minh Khai', 'Thi Minh Khai Nguyen']
+);
+
 # Disable test suites temporarily
 
 #@test_cases = ();
@@ -341,6 +357,7 @@ my @normalization_cases =
 #@split_exception_cases = ();
 #@nonascii_punctuation_cases = ();
 #@normalization_cases = ();
+#@namejoin_cases = ();
 
 # Calculate the number of test cases so that prove can display
 # "currenttest/totaltests" while the tests are running, rather
@@ -359,6 +376,7 @@ my $num_bad_split_exception = 4;
 my $num_split_exception = scalar @split_exception_cases;
 my $num_nonascii_punctuation_cases = sum 0, map { scalar(@{$_}) - 1 } @nonascii_punctuation_cases;
 my $num_normaliation_cases = scalar @normalization_cases;
+my $num_namejoin_cases = scalar @namejoin_cases;
 
 plan tests =>
 	$num_undef * 5 +
@@ -374,6 +392,7 @@ plan tests =>
 	$num_split_exception * 2 +
 	$num_nonascii_punctuation_cases * 4 +
 	$num_normaliation_cases * 24 +
+	$num_namejoin_cases * 1 +
 	$nowarnings;
 
 # Run normalize first, before $namecase_exceptions_re is defined.
@@ -724,6 +743,15 @@ for my $case (@normalization_cases)
 	is namesplit($nfd_case), $nfd_case, "normalize(NFD) namesplit(NFD $nfd_case)";
 	is namesplit($nfd_ucase), $nfd_case, "normalize(NFD) namesplit(NFD $nfd_ucase)";
 	is namesplit($nfd_lcase), $nfd_case, "normalize(NFD) namesplit(NFD $nfd_lcase)";
+}
+
+# Test namejoin
+
+for my $case (@namejoin_cases)
+{
+	my ($f, $g, $expected) = @{$case};
+
+	is namejoin($f, $g), $expected, "namejoin(@{[$f // 'undef']}, @{[$g // 'undef']})";
 }
 
 # vim:set fenc=latin1:

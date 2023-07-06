@@ -391,8 +391,8 @@ my @korean_split_cases =
 	['Kim Taek Yong', 'Kim, Taek Yong'],
 
 	# Note: Two of these family-name-last tests fail because the
-	# middle names look like family names as well. This can be fixed
-	# with split exceptions
+	# middle names look like (Chinese and Korean) family names as well.
+	# This can be fixed with split exceptions
 	# ['Young Ho Lee', 'Lee, Young Ho'],
 	# ['Yo Hwan Lim', 'Lim, Yo Hwan'],
 	['Taek Yong Kim', 'Kim, Taek Yong']
@@ -479,6 +479,33 @@ my @cjk_split_exception_cases =
 	'高橋, 永子',
 );
 
+# Test cases for namejoin() are three-element arrayrefs containing the input
+# family name and given names, and the expected resulting full name.
+
+my @namejoin_cases =
+(
+	[undef, undef, undef],
+	[undef, 'Giv', 'Giv'],
+	['Fam', undef, 'Fam'],
+
+	['Smith', 'Peter', 'Peter Smith'],
+	['van Haag', 'Bram', 'Bram van Haag'],
+
+	['胡', '锦涛', '胡锦涛'],
+	['Hu', 'Jintao', 'Jintao Hu'],
+
+	['임', '요환', '임요환'],
+	['林', '遙煥', '林遙煥'],
+	['Lim', 'Yo Hwan', 'Yo Hwan Lim'],
+
+	['林', '圭司', '林圭司'],
+	['林', 'けいじ', '林けいじ'],
+	['林', 'ケイジ', '林ケイジ'],
+
+	['Nguyễn', 'Thị Minh Khai', 'Thị Minh Khai Nguyễn'],
+	['Nguyen', 'Thi Minh Khai', 'Thi Minh Khai Nguyen']
+);
+
 # Disable test suites temporarily
 
 #@test_cases = ();
@@ -493,6 +520,7 @@ my @cjk_split_exception_cases =
 #@vietnamese_split_cases = ();
 #@japanese_split_cases = ();
 #@cjk_split_exception_cases = ();
+#@namejoin_cases = ();
 
 # Calculate the number of test cases so that prove can display
 # "currenttest/totaltests" while the tests are running, rather
@@ -517,6 +545,7 @@ my $num_korean_exceptions = scalar @korean_split_exception_cases;
 my $num_vietnamese_cases = scalar @vietnamese_split_cases;
 my $num_japanese_cases = scalar @japanese_split_cases;
 my $num_cjk_split_exceptions = scalar @cjk_split_exception_cases;
+my $num_namejoin_cases = scalar @namejoin_cases;
 
 plan tests =>
 	$num_undef * 5 +
@@ -538,6 +567,7 @@ plan tests =>
 	$num_vietnamese_cases * 4 +
 	$num_japanese_cases * 2 +
 	$num_cjk_split_exceptions * 1 +
+	$num_namejoin_cases * 1 +
 	$nowarnings;
 
 # Run normalize first, before $namecase_exceptions_re is defined.
@@ -975,6 +1005,15 @@ for my $case (@cjk_split_exception_cases)
 	namesplit_exception($case);
 
 	is namesplit("$f$g"), $case, "namesplit($f$g) CJK split exception";
+}
+
+# Test namejoin
+
+for my $case (@namejoin_cases)
+{
+	my ($f, $g, $expected) = @{$case};
+
+	is namejoin($f, $g), $expected, "namejoin(@{[$f // 'undef']}, @{[$g // 'undef']})";
 }
 
 # vim:set fenc=utf8:

@@ -22,14 +22,14 @@ our @EXPORT = ();
 our @EXPORT_OK =
 qw(
 	namecase gnamecase fnamecase namecase_exception
-	namesplit nameparts namesplit_exception
+	namesplit nameparts namesplit_exception namejoin
 	nametrim normalize
 );
 our %EXPORT_TAGS =
 (
 	all => [@EXPORT_OK],
 	case => [qw(namecase gnamecase fnamecase namecase_exception normalize)],
-	split => [qw(namesplit nameparts namesplit_exception normalize)]
+	split => [qw(namesplit nameparts namesplit_exception namejoin normalize)]
 );
 
 # Like fc() but "folds" apostrophe-like and hyphen-like characters as well
@@ -1059,6 +1059,19 @@ sub nameparts
 	return () unless defined $name and length $name;
 
 	return split /, ?/, namesplit($name), 2;
+}
+
+# Format a full name in Eastern or Western name order as appropriate
+
+sub namejoin
+{
+	my ($f, $g) = @_;
+
+	return $f if !defined $g;
+	return $g if !defined $f;
+
+	return "$f$g" if "$f$g" =~ /^[\p{Han}\p{Hangul}\p{Hiragana}\p{Katakana}]+$/;
+	return "$g $f";
 }
 
 # Trim the supplied name
