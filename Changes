@@ -1,5 +1,9 @@
 {{$NEXT}}
 
+1.002 (2023-07-06)
+
+    - doc - Add missing namejoin from first "use" example
+
 1.001 (2023-07-06)
 
     - doc - Better (more explicit) names for function return values

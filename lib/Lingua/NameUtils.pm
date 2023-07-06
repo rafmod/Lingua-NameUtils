@@ -13,7 +13,7 @@ use strict;
 use warnings;
 use utf8;
 
-our $VERSION = '1.001';
+our $VERSION = '1.002';
 
 use Exporter;
 our @ISA = ('Exporter');
