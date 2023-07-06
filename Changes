@@ -1,5 +1,17 @@
 {{$NEXT}}
 
+1.001 (2023-07-06)
+
+    - doc - Better (more explicit) names for function return values
+    - Delay remaining setup computation until needed
+    - Fix remaining regexes that need to be affected by normalization
+    - doc - Minor fixes and another example
+    - Make lowercasing after single letter and apostrophe smarter
+    - Fix romanized Chinese/Korean names with apostrophe-like characters
+    - doc - Slight improvements
+    - Add namejoin
+    - Stop suppressing Lingua::JA::Name::Splitter warning about kanji repeater symbol (it no longer warns since v0.010)
+
 1.000 (2023-06-30)
 
     - Translate to Perl

@@ -80,6 +80,6 @@ module from CPAN.
     URL: https://metacpan.org/dist/Lingua-NameUtils
     GIT: https://github.com/rafmod/Lingua-NameUtils
     GIT: https://codeberg.org/rafmod/Lingua-NameUtils
-    Date: 20230630
+    Date: 20230706
     Author: raf <raf@raf.org>
 

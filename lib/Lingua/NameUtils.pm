@@ -5,7 +5,7 @@
 # This is free software; you can redistribute it and/or modify it under
 # the same terms as the Perl 5 programming language system itself.
 #
-# 20230630 raf <raf@raf.org>
+# 20230706 raf <raf@raf.org>
 
 package Lingua::NameUtils;
 use 5.014;
@@ -13,7 +13,7 @@ use strict;
 use warnings;
 use utf8;
 
-our $VERSION = '1.000';
+our $VERSION = '1.001';
 
 use Exporter;
 our @ISA = ('Exporter');

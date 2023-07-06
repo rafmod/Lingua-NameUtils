@@ -552,7 +552,7 @@ L<Unicode::Stringprep>.
 
 =head1 AUTHOR
 
-20230630 raf <raf@raf.org>
+20230706 raf <raf@raf.org>
 
 =head1 COPYRIGHT AND LICENSE
 
