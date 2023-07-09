@@ -1,5 +1,13 @@
 {{$NEXT}}
 
+1.003 (2023-07-09)
+
+    - doc - Fixes and improvements
+    - Fix normalize buglet - add underlying data as well
+    - Suppress Lingua::JA::Name::Splitter warnings for short names
+    - Fix case exception bug - built-in exceptions not initialized if namecase_exception called before namecase
+    - Add a few more tests for (unreported) branch coverage
+
 1.002 (2023-07-06)
 
     - doc - Add missing namejoin from first "use" example
