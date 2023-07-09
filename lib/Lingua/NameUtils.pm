@@ -1004,8 +1004,9 @@ sub namesplit
 			$ja_loaded = 1;
 		}
 
+		local $SIG{__WARN__} = sub {}; # Suppress warnings
 		($f, $g) = Lingua::JA::Name::Splitter::split_kanji_name($name);
-		return "$f, $g";
+		return join(', ', grep { length } $f, $g);
 	}
 
 	# Assume a single-word family name
