@@ -246,7 +246,9 @@ my @nametrim_cases =
 	["    John       Smith    ", "John Smith"],
 	["    Smith   ,  John     ", "Smith, John"],
 	["    Smith   ,John     ", "Smith, John"],
-	[" 		   Smith 	  , 	 John  	   ", "Smith, John"]
+	[" 		   Smith 	  , 	 John  	   ", "Smith, John"],
+	["  Peter Smith - Jones  ", "Peter Smith-Jones"],
+	[" Smith - Jones ,Peter ", "Smith-Jones, Peter"]
 );
 
 # Test cases for namecase_exception() are strings containing

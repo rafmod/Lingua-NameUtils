@@ -259,7 +259,9 @@ my @nametrim_cases =
 	["    John       Smith    ", "John Smith"],
 	["    Smith   ,  John     ", "Smith, John"],
 	["    Smith   ,John     ", "Smith, John"],
-	[" 		   Smith 	  , 	 John  	   ", "Smith, John"]
+	[" 		   Smith 	  , 	 John  	   ", "Smith, John"],
+	["  Peter Smith - Jones  ", "Peter Smith-Jones"],
+	[" Smith - Jones ,Peter ", "Smith-Jones, Peter"]
 );
 
 # Test cases for namecase_exception() are strings containing
@@ -462,8 +464,9 @@ my @japanese_split_cases =
 	['小山みきお', '小山, みきお'],
 	['小山ミキオ', '小山, ミキオ'],
 
-	['佐', '佐'],
-	['佐じ', '佐, じ']
+	['佐', '佐'], # 1 kanji
+	['佐じ', '佐, じ'], # 2 kanji
+	['佐张ケイ', '佐张, ケイ'] # 1 unknown kanji
 );
 
 # CJK namesplit exceptions
