@@ -1103,6 +1103,8 @@ sub normalize
 	%fnamecase_exceptions_full = map { $func->($_) => $func->($fnamecase_exceptions_full{$_}) } keys %fnamecase_exceptions_full;
 	$namecase_exceptions_re = $func->($namecase_exceptions_re) if defined $namecase_exceptions_re;
 	%namesplit_exceptions = map { $func->($_) => $func->($namesplit_exceptions{$_}) } keys %namesplit_exceptions;
+	@split_starter = map { $func->($_) } @split_starter;
+	$split_starter_re = $func->($split_starter_re) if defined $split_starter_re;
 	%split_starter = map { $func->($_) => 1 } keys %split_starter;
 	@irish_o = map { $func->($_) } @irish_o;
 	$irish_o_re = '(?:' . join('|', @irish_o) . ')';
