@@ -869,6 +869,7 @@ sub namecase_exception
 	}
 	else # Family-wide exception
 	{
+		%namecase_exceptions = map { kc($_) => $_ } @namecase_exceptions unless %namecase_exceptions;
 		$namecase_exceptions{$kcname} = $name;
 	}
 
@@ -1126,6 +1127,25 @@ sub normalize
 	@family_names_korean = map { $func->($_) }  @family_names_korean;
 	@family_names_korean_roman = map { $func->($_) }  @family_names_korean_roman;
 	@family_names_vietnamese = map { $func->($_) }  @family_names_vietnamese;
+}
+
+# Reset internal data (for test coverage purposes)
+
+sub _reset_data
+{
+	%namecase_exceptions = (); # This is the only one that matters (initialized in two places)
+	%namecase_exceptions_full = ();
+	%fnamecase_exceptions_full = ();
+	$need_case_update = 1;
+	$namecase_exceptions_re = undef;
+	%split_starter = ();
+	$split_starter_re = undef;
+	%family_names_ck = ();
+	$family_names_ck_re = undef;
+	%family_names_ck_roman = ();
+	$family_names_ck_roman_re = undef;
+	%family_names_v_roman = ();
+	$family_names_v_roman_re = undef;
 }
 
 1;

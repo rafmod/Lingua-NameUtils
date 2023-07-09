@@ -509,6 +509,22 @@ my @namejoin_cases =
 	['Nguyen', 'Thi Minh Khai', 'Thi Minh Khai Nguyen']
 );
 
+# Test cases after resetting internal data. Each case is an arrayref
+# containing the case exception, and a follow-up namecase test. If the
+# follow-up namecase test succeeds, that means that the built-in namecase
+# exceptions were successfully initialised by namecase_exception() after
+# the internal data was reset. This tests that the built-in namecase
+# exceptions are initialised when namecase_exception() is called before
+# namecase() is called (which also initializes the built-in namecase
+# exceptions). All previous namecase tests rely on namecase() initializing
+# the built-in namecase exceptions the first time it is called. This tests
+# the other location where built-in namecase exceptions are initialized.
+
+my @post_reset_case_exception_cases =
+(
+	["Macdonald", "MacAlister"]
+);
+
 # Disable test suites temporarily
 
 #@test_cases = ();
@@ -524,6 +540,7 @@ my @namejoin_cases =
 #@japanese_split_cases = ();
 #@cjk_split_exception_cases = ();
 #@namejoin_cases = ();
+#@post_reset_case_exception_cases = ();
 
 # Calculate the number of test cases so that prove can display
 # "currenttest/totaltests" while the tests are running, rather
@@ -549,6 +566,7 @@ my $num_vietnamese_cases = scalar @vietnamese_split_cases;
 my $num_japanese_cases = scalar @japanese_split_cases;
 my $num_cjk_split_exceptions = scalar @cjk_split_exception_cases;
 my $num_namejoin_cases = scalar @namejoin_cases;
+my $num_post_reset_case_exception_cases = scalar @post_reset_case_exception_cases;
 
 plan tests =>
 	$num_undef * 5 +
@@ -571,6 +589,7 @@ plan tests =>
 	$num_japanese_cases * 2 +
 	$num_cjk_split_exceptions * 1 +
 	$num_namejoin_cases * 1 +
+	$num_post_reset_case_exception_cases * 6 +
 	$nowarnings;
 
 # Run normalize first, before $namecase_exceptions_re is defined.
@@ -1017,6 +1036,25 @@ for my $case (@namejoin_cases)
 	my ($f, $g, $expected) = @{$case};
 
 	is namejoin($f, $g), $expected, "namejoin(@{[$f // 'undef']}, @{[$g // 'undef']})";
+}
+
+# Test post-reset namecase exceptions
+
+Lingua::NameUtils::_reset_data();
+
+for my $case (@post_reset_case_exception_cases)
+{
+	my ($exception, $followup) = @{$case};
+
+	namecase_exception($exception);
+
+	is namecase($exception), $exception, "post-reset namecase_exception: " . $exception;
+	is namecase(uc $exception), $exception, "post-reset namecase_exception: " . uc $exception;
+	is namecase(lc $exception), $exception, "post-reset namecase_exception: " . lc $exception;
+
+	is namecase($followup), $followup, "post-reset namecase_exception follow-up: " . $followup;
+	is namecase(uc $followup), $followup, "post-reset namecase_exception follow-up: " . uc $followup;
+	is namecase(lc $followup), $followup, "post-reset namecase_exception follow-up: " . lc $followup;
 }
 
 # vim:set fenc=utf8:
